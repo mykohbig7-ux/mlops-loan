@@ -5,10 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "fastapi[standard]>=0.128.0",
+    "fastapi[stadard,standard]>=0.141.1",
+    "ipykernel>=7.2.0",
     "joblib>=1.5.3",
-    "numpy>=2.4.5",
-    "pandas>=3.0.3",
-    "scikit-learn>=1.8.0",
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "scikit-learn>=1.7.2",
     "xgboost>=3.2.0",
 ]
