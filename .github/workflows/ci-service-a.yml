@@ -64,7 +64,7 @@ jobs:
 
       # -- 5. 코드 스타일 검사 (린트) : 설정은 mlops-loan/ruff.toml을 자동으로 읽는다.  -----------
       - name: Lint with ruff
-        run: ruff check .
+        run: ruff check .  
 
       # -- 6. 테스트 실행 ------------------
       - name: Run tests
@@ -104,4 +104,3 @@ jobs:
           echo "헬스체크 실패: 컨테이너 로그를 출력합니다."
           docker logs loan-api-ci
           exit 1
-
