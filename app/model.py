@@ -89,7 +89,7 @@ class LoanModel:
         self.label_encoders = joblib.load(encoder_path)
         self.feature_names = joblib.load(feature_names_path)
 
-        logging.info('모델 로드 완료!')
+        logger.info('모델 로드 완료!')
 
     # @staticmethod (정적 메서드)
     #   클래스 내부에 정의하지만 인스턴스(self)나 클래스(cls) 정보를 받지 않는 메서드를 만들 때 사용
@@ -109,10 +109,8 @@ class LoanModel:
         # return result  # return {FIELD_TO_COLUMN.get(k, k): v for k, v in data.items()}
         result = {}
         for key, value in data.items():
-            if key in FIELD_TO_COLUMN:
-                korean_key = FIELD_TO_COLUMN[key]  # ex) 나이
-            else:
-                korean_key = key  # ex) age
+            # 복잡한 if-else 블록을 깔끔한 .get 표현식으로 교체 (SIM401 해결)
+            korean_key = FIELD_TO_COLUMN.get(key, key)
             result[korean_key] = value
 
         return result

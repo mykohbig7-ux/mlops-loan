@@ -44,7 +44,7 @@ async def lifespan(app: FastAPI):
     (전역 변수로 로드 --> 테스트가 어렵고 로드 실패 시 서버 자체가 멈추기 때문에 좋지 않은 방법)
 
     """
-    logging.info('대출 심사 모델을 로드합니다.')
+    logger.info('대출 심사 모델을 로드합니다.')
 
     # 먼저 래퍼 객체를 만든 뒤 직렬화된 모델/인코더/특성 목록을 로드한다.
     model = LoanModel()
@@ -55,7 +55,8 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f'모델 로드 실패: {e}')
         logger.warning('/predict 엔드포인트는 모델 로드 후 사용 가능')
-
+    yield
+    
     # app.state --> FastAPI 앱 하나에 딸린 공용 보관함 같은 객체
     #       여기에 넣어둔 model 은 이후 /health, /predict 같은 모든 요청에서 app.state.model로
     #       꺼내 사용할 수 있다.
@@ -137,7 +138,7 @@ async def predict(request: LoanRequest):
     except ValueError:
         raise HTTPException(status_code=422, detail='입력값처리오류')
     except Exception as e:
-        logger.error(f'예측 처리 중 예상치 못한 오류 발생 : {e}', exc_info=True)
+        logger.error(f'예측 처리 중 예상치 못한 오류 발생 : {e}')
         raise HTTPException(status_code=500)
     
 # ------------------------------------------------------------------------------------------
@@ -159,7 +160,7 @@ async def predict_batch(request: BatchLoanRequest):
     except ValueError:
         raise HTTPException(status_code=422, detail='입력값처리오류')
     except Exception as e:
-        logger.error(f'배치 예측 처리 중 예상치 못한 오류 발생: {e}', exc_info=True)
+        logger.error(f'배치 예측 처리 중 예상치 못한 오류 발생: {e}')
         raise HTTPException(status_code=500)
 
 # ------------------------------------------------------------------------------------------
