@@ -419,11 +419,14 @@ def test_predict_missing_field_returns_422(client, missing_field):
 def test_predict_returns_503_when_model_not_loaded(client, mock_model):
     """모델 미적재(RuntimeError) → 일시적 서비스 불가, 503"""
     mock_model.pipeline = None
-
+    
+    # raise_server_exceptions를 False로 세팅하여 503 응답 객체를 정상적으로 받아옵니다.
+    client.raise_server_exceptions = False
+    
     response = client.post("/predict", json=_make_valid_request())
-
+    
     assert response.status_code == 503
-    assert "로드" in response.json()["detail"]
+    assert "모델이 로드되지 않았습니다" in response.json()["detail"]
 
 
 def test_predict_returns_422_on_unseen_category(client, mock_model):

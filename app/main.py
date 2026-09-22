@@ -55,7 +55,6 @@ async def lifespan(app: FastAPI):
     except Exception as e:  # noqa: BLE001
         logger.error(f'모델 로드 실패: {e}')
         logger.warning('/predict 엔드포인트는 모델 로드 후 사용 가능')
-    yield
     
     # app.state --> FastAPI 앱 하나에 딸린 공용 보관함 같은 객체
     #       여기에 넣어둔 model 은 이후 /health, /predict 같은 모든 요청에서 app.state.model로
@@ -134,7 +133,7 @@ async def predict(request: LoanRequest):
     except RuntimeError as e:
         # 모델이 준비되지 않은 상태는 일시적인 서비스 불가로 표현
         # 503 에러 : Graceful Degradation의 HTTP 표현
-        raise HTTPException(status_code=503, detail=(e))
+        raise HTTPException(status_code=503, detail=str(e)) 
     except ValueError:
         raise HTTPException(status_code=422, detail='입력값처리오류')
     except Exception:
